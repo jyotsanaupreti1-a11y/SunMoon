@@ -1,1 +1,444 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account | LearnAI</title>
 
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #080b14;
+      --panel: #111625;
+      --border: #252d42;
+      --text: #f4f6ff;
+      --muted: #9ba5bd;
+      --purple: #9270ff;
+      --cyan: #53e4df;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Inter, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(ellipse at 15% 20%, #33206445, transparent 45%),
+        radial-gradient(ellipse at 90% 80%, #0a747533, transparent 40%),
+        var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    nav {
+      height: 76px;
+      padding: 0 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ffffff12;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .logo span {
+      color: var(--cyan);
+    }
+
+    .nav-link {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    main {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 40px 20px;
+    }
+
+    .signup-card {
+      width: 100%;
+      max-width: 460px;
+      padding: 36px;
+      background: #111625ef;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: 0 25px 90px #00000040;
+    }
+
+    .icon {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      font-size: 25px;
+      background: linear-gradient(135deg, #9270ff35, #53e4df25);
+      border: 1px solid #9270ff55;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-size: 29px;
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 26px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 9px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 15px;
+      border-radius: 11px;
+      border: 1px solid var(--border);
+      outline: none;
+      background: #0a0e19;
+      color: white;
+      font-size: 14px;
+    }
+
+    input:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px #9270ff18;
+    }
+
+    input::placeholder {
+      color: #68738c;
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap input {
+      padding-right: 70px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: var(--cyan);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .password-hint {
+      color: #78849d;
+      font-size: 11px;
+      line-height: 1.6;
+      margin-top: 8px;
+    }
+
+    .terms {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+      margin: 22px 0;
+    }
+
+    .terms input {
+      width: 15px;
+      height: 15px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      accent-color: var(--purple);
+    }
+
+    .terms a {
+      color: var(--cyan);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 11px;
+      background: linear-gradient(110deg, var(--purple), #6e86ff);
+      color: white;
+      font-size: 14px;
+      font-weight: 750;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .message {
+      display: none;
+      margin-top: 18px;
+      padding: 13px;
+      border: 1px solid #53e4df50;
+      background: #53e4df0c;
+      color: #a8f5ef;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .login {
+      text-align: center;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .login a {
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .security-note {
+      color: #78849d;
+      font-size: 11px;
+      text-align: center;
+      line-height: 1.6;
+      margin-top: 22px;
+    }
+
+    footer {
+      text-align: center;
+      color: #69748c;
+      font-size: 12px;
+      padding: 22px;
+    }
+
+    @media (max-width: 480px) {
+      .signup-card {
+        padding: 26px 21px;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <a class="logo" href="index.html">Learn<span>AI</span></a>
+    <a class="nav-link" href="index.html">← Back to home</a>
+  </nav>
+
+  <main>
+    <section class="signup-card">
+      <div class="icon">✦</div>
+
+      <h1>Create your account</h1>
+      <p class="subtitle">
+        Start turning your notes, textbooks and presentations into
+        personalized learning experiences.
+      </p>
+
+      <form id="signupForm">
+        <div class="field">
+          <label for="name">Full name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter your full name"
+            autocomplete="name"
+            minlength="2"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="email">Email address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="password">Create password</label>
+          <div class="password-wrap">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="At least 8 characters"
+              autocomplete="new-password"
+              minlength="8"
+              required
+            >
+            <button
+              class="toggle-password"
+              id="togglePassword"
+              type="button"
+            >SHOW</button>
+          </div>
+          <p class="password-hint">
+            Use at least 8 characters, including a letter and a number.
+          </p>
+        </div>
+
+        <div class="field">
+          <label for="confirmPassword">Confirm password</label>
+          <div class="password-wrap">
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="Enter your password again"
+              autocomplete="new-password"
+              minlength="8"
+              required
+            >
+            <button
+              class="toggle-password"
+              id="toggleConfirmPassword"
+              type="button"
+            >SHOW</button>
+          </div>
+        </div>
+
+        <label class="terms">
+          <input type="checkbox" id="terms" required>
+          <span>
+            I agree to the <a href="#" id="termsLink">Terms of Use</a>
+            and understand that this is currently a demo application.
+          </span>
+        </label>
+
+        <button class="submit-btn" type="submit">
+          Create account →
+        </button>
+
+        <div class="message" id="message" role="status"></div>
+      </form>
+
+      <p class="login">
+        Already have an account?
+        <a href="login.html">Sign in</a>
+      </p>
+
+      <p class="security-note">
+        Account creation is not connected to a server yet.
+        Your password will not be saved or sent anywhere.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 LearnAI · Learn anything, your way.
+  </footer>
+
+  <script>
+    const form = document.getElementById("signupForm");
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("confirmPassword");
+    const message = document.getElementById("message");
+
+    function toggleVisibility(inputId, buttonId) {
+      const input = document.getElementById(inputId);
+      const button = document.getElementById(buttonId);
+
+      button.addEventListener("click", function () {
+        const isHidden = input.type === "password";
+
+        input.type = isHidden ? "text" : "password";
+        button.textContent = isHidden ? "HIDE" : "SHOW";
+      });
+    }
+
+    toggleVisibility("password", "togglePassword");
+    toggleVisibility("confirmPassword", "toggleConfirmPassword");
+
+    function showMessage(text) {
+      message.style.display = "block";
+      message.textContent = text;
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const passwordValue = password.value;
+
+      if (!/[A-Za-z]/.test(passwordValue) ||
+          !/[0-9]/.test(passwordValue)) {
+        showMessage(
+          "Please include at least one letter and one number in your password."
+        );
+        return;
+      }
+
+      if (passwordValue !== confirmPassword.value) {
+        showMessage("Your passwords do not match. Please try again.");
+        confirmPassword.focus();
+        return;
+      }
+
+      showMessage(
+        "Your form is working! Real account creation is not connected yet. " +
+        "No account was created, and your password was not saved."
+      );
+    });
+
+    document.getElementById("termsLink").addEventListener(
+      "click",
+      function (event) {
+        event.preventDefault();
+
+        showMessage(
+          "The full Terms of Use will be added when the application is ready."
+        );
+      }
+    );
+  </script>
+</body>
+</html>
+```
