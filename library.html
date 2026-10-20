@@ -1,1 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Learning Library | LearnAI</title>
 
+  <style>
+    :root {
+      --bg: #090b12;
+      --surface: #111521;
+      --surface2: #191e2d;
+      --text: #f5f7ff;
+      --muted: #a0a8bc;
+      --primary: #8b75ff;
+      --secondary: #44d9c1;
+      --border: rgba(255,255,255,.11);
+      --danger: #ff8594;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .container {
+      width: min(1120px, 92%);
+      margin: auto;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav {
+      min-height: 75px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 850;
+      letter-spacing: -1px;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .nav-links a:hover {
+      color: white;
+    }
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 15px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface2);
+      color: var(--text);
+      font-size: .86rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #8067ff, #a16dff);
+      border-color: transparent;
+    }
+
+    main {
+      padding: 48px 0 80px;
+    }
+
+    .heading-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      color: var(--secondary);
+      font-size: .8rem;
+      font-weight: 750;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(2.1rem, 5vw, 3.3rem);
+      line-height: 1.2;
+      letter-spacing: -1.5px;
+      margin: 10px 0;
+    }
+
+    .heading-description {
+      color: var(--muted);
+      max-width: 600px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      padding: 21px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+    }
+
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--secondary);
+    }
+
+    .stat-label {
+      font-size: .86rem;
+      color: var(--muted);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .search-wrap {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .search-wrap input,
+    .toolbar select {
+      width: 100%;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 12px 14px;
+      outline: none;
+    }
+
+    .search-wrap input:focus,
+    .toolbar select:focus {
+      border-color: var(--primary);
+    }
+
+    .toolbar select {
+      width: auto;
+      min-width: 165px;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .section-heading h2 {
+      font-size: 1.25rem;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    .lesson-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .lesson-card {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      overflow: hidden;
+      transition: transform .2s, border-color .2s;
+    }
+
+    .lesson-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(139,117,255,.5);
+    }
+
+    .lesson-cover {
+      min-height: 145px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 70% 20%, #453b75, transparent 45%),
+        linear-gradient(135deg, #1c1a32, #122b31);
+      font-size: 3.2rem;
+    }
+
+    .lesson-cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(9,11,18,.4), transparent);
+      pointer-events: none;
+    }
+
+    .lesson-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 12px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 7px;
+      background: rgba(139,117,255,.13);
+      color: #c6baff;
+      font-size: .73rem;
+    }
+
+    .badge.ready {
+      background: rgba(68,217,193,.1);
+      color: var(--secondary);
+    }
+
+    .badge.pending {
+      background: rgba(255,190,100,.1);
+      color: #ffcf91;
+    }
+
+    .lesson-body h3 {
+      font-size: 1.05rem;
+      line-height: 1.4;
+      margin-bottom: 8px;
+      overflow-wrap: anywhere;
+    }
+
+    .lesson-description {
+      color: var(--muted);
+      font-size: .84rem;
+      margin-bottom: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .lesson-meta {
+      color: #8f98ae;
+      font-size: .77rem;
+      margin-top: auto;
+      padding-top: 10px;
+    }
+
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .card-actions .btn {
+      flex: 1;
+    }
+
+    .delete-button {
+      color: var(--danger);
+    }
+
+    .empty-state {
+      display: none;
+      text-align: center;
+      padding: 65px 20px;
+      border: 1px dashed #45405f;
+      border-radius: 18px;
+      background: rgba(139,117,255,.035);
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+
+    .empty-state h2 {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+
+    .empty-state p {
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .notice {
+      color: var(--muted);
+      font-size: .82rem;
+      margin-top: 25px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 25px 0;
+      color: var(--muted);
+      font-size: .83rem;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 850px) {
+      .lesson-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 540px) {
+      .lesson-grid,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar > * {
+        width: 100%;
+      }
+
+      .toolbar select {
+        width: 100%;
+      }
+
+      .nav-links {
+        gap: 11px;
+        font-size: .8rem;
+      }
+
+      .heading-row .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="container">
+      <a class="logo" href="index.html">Learn<span>AI.</span></a>
+
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="upload.html">Create lesson</a>
+        <a href="configure.html">Customize</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="heading-row">
+      <div>
+        <div class="eyebrow">Your learning space</div>
+        <h1>My learning library.</h1>
+        <p class="heading-description">
+          All your lessons in one place. Search your learning history,
+          revisit a topic, and continue where you left off.
+        </p>
+      </div>
+
+      <a href="upload.html" class="btn btn-primary">＋ Create new lesson</a>
+    </section>
+
+    <section class="stats">
+      <div class="stat-card">
+        <div class="stat-number" id="totalLessons">0</div>
+        <div class="stat-label">Saved lessons</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-number" id="readyLessons">0</div>
+        <div class="stat-label">Videos available</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-number" id="languageCount">0</div>
+        <div class="stat-label">Languages explored</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="toolbar">
+        <div class="search-wrap">
+          <input
+            type="search"
+            id="searchInput"
+            placeholder="Search lessons or topics..."
+            aria-label="Search lessons">
+        </div>
+
+        <select id="statusFilter" aria-label="Filter by status">
+          <option value="all">All statuses</option>
+          <option value="ready">Video available</option>
+          <option value="draft">Demo / no video</option>
+        </select>
+
+        <select id="sortFilter" aria-label="Sort lessons">
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="az">Name A–Z</option>
+        </select>
+      </div>
+
+      <div class="section-heading">
+        <h2>Your lessons</h2>
+        <p id="resultCount">0 lessons</p>
+      </div>
+
+      <div class="lesson-grid" id="lessonGrid"></div>
+
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">📚</div>
+        <h2 id="emptyTitle">Your library is waiting.</h2>
+        <p id="emptyDescription">
+          Create your first personalized lesson to start building your library.
+        </p>
+        <a href="upload.html" class="btn btn-primary">Create my first lesson →</a>
+      </div>
+
+      <p class="notice">
+        Your browser stores these demo lesson records locally. A connected
+        backend and database will be required to synchronize lessons across
+        devices and user accounts. Uploaded source files are not stored here.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <a class="logo" href="index.html">Learn<span>AI.</span></a>
+      <p>Learn anything, your way.</p>
+    </div>
+  </footer>
+
+  <script>
+    const STORAGE_KEY = "learnAI_library";
+    const SOURCE_KEY = "learnAI_lessonConfig";
+    const CONFIG_KEY = "learnAI_teacherConfig";
+    const VIDEO_KEY = "learnAI_generatedLesson";
+
+    const $ = id => document.getElementById(id);
+
+    function readJSON(key, fallback = null) {
+      try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function writeJSON(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function createId() {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        return window.crypto.randomUUID();
+      }
+
+      return Date.now().toString(36) +
+        Math.random().toString(36).slice(2);
+    }
+
+    function escapeText(value) {
+      return String(value ?? "");
+    }
+
+    function getLibrary() {
+      const saved = readJSON(STORAGE_KEY, []);
+      return Array.isArray(saved) ? saved : [];
+    }
+
+    /*
+      Import the current lesson configuration once.
+      Only metadata is saved; browser File objects and file contents
+      are not transferred into this library.
+    */
+    function importCurrentLesson() {
+      const source = readJSON(SOURCE_KEY);
+      const config = readJSON(CONFIG_KEY);
+
+      if (!source && !config) return;
+
+      const signature = JSON.stringify({
+        topic: source?.topic || "",
+        files: (source?.files || []).map(file => file.name),
+        teacher: config?.teacher || "",
+        language: config?.language || source?.language || ""
+      });
+
+      const importedSignatures = readJSON(
+        "learnAI_importedSignatures",
+        []
+      );
+
+      if (importedSignatures.includes(signature)) return;
+
+      const title = source?.topic?.trim() ||
+        (source?.files?.length
+          ? source.files.map(file => file.name).join(", ")
+          : "Personalized AI lesson");
+
+      const lesson = {
+        id: createId(),
+        title,
+        description: source?.instructions ||
+          config?.customInstructions ||
+          "Your personalized learning lesson.",
+        teacher: config?.teacher || "Patient Beginner",
+        language: config?.language || source?.language || "English",
+        duration: config?.duration || "Not generated",
+        createdAt: new Date().toISOString(),
+        status: "draft",
+        videoUrl: null
+      };
+
+      const library = getLibrary();
+      library.unshift(lesson);
+
+      try {
+        writeJSON(STORAGE_KEY, library);
+        importedSignatures.push(signature);
+        writeJSON("learnAI_importedSignatures", importedSignatures);
+      } catch (error) {
+        console.warn("Could not save the lesson to the library.", error);
+      }
+    }
+
+    function formatDate(value) {
+      const date = new Date(value);
+
+      if (Number.isNaN(date.getTime())) return "Date unavailable";
+
+      return date.toLocaleDateString(undefined, {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      });
+    }
+
+    function createElement(tag, className, text) {
+      const element = document.createElement(tag);
+
+      if (className) element.className = className;
+      if (text !== undefined) element.textContent = text;
+
+      return element;
+    }
+
+    function createLessonCard(lesson) {
+      const card = createElement("article", "lesson-card");
+
+      const cover = createElement("div", "lesson-cover");
+      cover.textContent = "🎓";
+      cover.setAttribute("aria-hidden", "true");
+
+      const body = createElement("div", "lesson-body");
+      const badges = createElement("div", "badges");
+
+      badges.append(
+        createElement("span", "badge", lesson.language || "English"),
+        createElement(
+          "span",
+          "badge " + (lesson.status === "ready" ? "ready" : "pending"),
+          lesson.status === "ready" ? "Video available" : "Demo / no video"
+        )
+      );
+
+      const title = createElement("h3", "", lesson.title);
+      const description = createElement(
+        "p",
+        "lesson-description",
+        lesson.description || "Personalized AI lesson."
+      );
+
+      const meta = createElement(
+        "p",
+        "lesson-meta",
+        (lesson.teacher || "AI teacher") +
+          " · " + (lesson.duration || "Duration pending") +
+          " · " + formatDate(lesson.createdAt)
+      );
+
+      const actions = createElement("div", "card-actions");
+
+      const openButton = createElement(
+        "a",
+        "btn btn-primary",
+        lesson.status === "ready" ? "▶ Watch" : "Open lesson"
+      );
+
+      openButton.href = "lesson.html";
+
+      openButton.addEventListener("click", event => {
+        event.preventDefault();
+
+        try {
+          const videoData = lesson.videoUrl
+            ? {
+                title: lesson.title,
+                videoUrl: lesson.videoUrl,
+                chapters: lesson.chapters || [],
+                transcript: lesson.transcript || "",
+                notes: lesson.notes || []
+              }
+            : null;
+
+          if (videoData) {
+            sessionStorage.setItem(
+              VIDEO_KEY,
+              JSON.stringify(videoData)
+            );
+          } else {
+            sessionStorage.removeItem(VIDEO_KEY);
+          }
+
+          sessionStorage.setItem(
+            "learnAI_lessonConfig",
+            JSON.stringify({
+              topic: lesson.title,
+              instructions: lesson.description,
+              language: lesson.language,
+              files: []
+            })
+          );
+
+          sessionStorage.setItem(
+            CONFIG_KEY,
+            JSON.stringify({
+              teacher: lesson.teacher,
+              language: lesson.language,
+              duration: lesson.duration
+            })
+          );
+
+          window.location.href = "lesson.html";
+        } catch {
+          alert("Could not open this lesson. Please try again.");
+        }
+      });
+
+      const deleteButton = createElement(
+        "button",
+        "btn delete-button",
+        "Delete"
+      );
+
+      deleteButton.type = "button";
+
+      deleteButton.addEventListener("click", () => {
+        const confirmed = window.confirm(
+          'Delete "' + lesson.title + '" from your local library?'
+        );
+
+        if (!confirmed) return;
+
+        const updated = getLibrary().filter(item => item.id !== lesson.id);
+
+        try {
+          writeJSON(STORAGE_KEY, updated);
+          renderLibrary();
+        } catch {
+          alert("Could not update the library.");
+        }
+      });
+
+      actions.append(openButton, deleteButton);
+      body.append(badges, title, description, meta, actions);
+      card.append(cover, body);
+
+      return card;
+    }
+
+    function renderLibrary() {
+      const allLessons = getLibrary();
+      const search = $("searchInput").value.trim().toLowerCase();
+      const status = $("statusFilter").value;
+      const sort = $("sortFilter").value;
+
+      $("totalLessons").textContent = allLessons.length;
+
+      $("readyLessons").textContent = allLessons.filter(
+        lesson => lesson.status === "ready"
+      ).length;
+
+      $("languageCount").textContent = new Set(
+        allLessons.map(lesson => lesson.language || "English")
+      ).size;
+
+      let filtered = allLessons.filter(lesson => {
+        const matchesSearch = [
+          lesson.title,
+          lesson.description,
+          lesson.teacher,
+          lesson.language
+        ].some(value =>
+          escapeText(value).toLowerCase().includes(search)
+        );
+
+        const matchesStatus =
+          status === "all" || lesson.status === status;
+
+        return matchesSearch && matchesStatus;
+      });
+
+      if (sort === "newest") {
+        filtered.sort((a, b) =>
+          new Date(b.createdAt) - new Date(a.createdAt)
+        );
+      } else if (sort === "oldest") {
+        filtered.sort((a, b) =>
+          new Date(a.createdAt) - new Date(b.createdAt)
+        );
+      } else if (sort === "az") {
+        filtered.sort((a, b) =>
+          a.title.localeCompare(b.title)
+        );
+      }
+
+      const grid = $("lessonGrid");
+      grid.replaceChildren();
+
+      filtered.forEach(lesson => {
+        grid.appendChild(createLessonCard(lesson));
+      });
+
+      $("resultCount").textContent =
+        filtered.length + (filtered.length === 1 ? " lesson" : " lessons");
+
+      const empty = $("emptyState");
+
+      empty.style.display = filtered.length ? "none" : "block";
+
+      if (!allLessons.length) {
+        $("emptyTitle").textContent = "Your library is waiting.";
+        $("emptyDescription").textContent =
+          "Create a lesson to start building your personal learning library.";
+      } else if (!filtered.length) {
+        $("emptyTitle").textContent = "No lessons found.";
+        $("emptyDescription").textContent =
+          "Try another search or change your filters.";
+      }
+    }
+
+    $("searchInput").addEventListener("input", renderLibrary);
+    $("statusFilter").addEventListener("change", renderLibrary);
+    $("sortFilter").addEventListener("change", renderLibrary);
+
+    importCurrentLesson();
+    renderLibrary();
+  </script>
+</body>
+</html>
