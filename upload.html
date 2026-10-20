@@ -1,1 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Learning Material | Learn AI</title>
 
+  <style>
+    :root {
+      --bg: #090b12;
+      --surface: #111521;
+      --surface-light: #191e2d;
+      --text: #f5f7ff;
+      --muted: #a0a8bc;
+      --primary: #8b75ff;
+      --secondary: #44d9c1;
+      --border: rgba(255,255,255,.11);
+      --danger: #ff7b88;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    button, a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .container {
+      width: min(1040px, 91%);
+      margin: auto;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 850;
+      letter-spacing: -1px;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .back-link {
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .back-link:hover {
+      color: white;
+    }
+
+    main {
+      padding: 55px 0 80px;
+    }
+
+    .page-heading {
+      margin-bottom: 35px;
+    }
+
+    .eyebrow {
+      color: var(--secondary);
+      font-size: .8rem;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.2;
+      letter-spacing: -1.5px;
+      margin: 12px 0;
+    }
+
+    .page-heading p {
+      color: var(--muted);
+      max-width: 650px;
+    }
+
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+      font-size: .85rem;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+    }
+
+    .step-number {
+      width: 27px;
+      height: 27px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+    }
+
+    .step.active {
+      color: white;
+    }
+
+    .step.active .step-number {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .step-line {
+      width: 35px;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .panel {
+      padding: 28px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      margin-bottom: 22px;
+    }
+
+    .panel-heading {
+      margin-bottom: 18px;
+    }
+
+    .panel-heading h2 {
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+    }
+
+    .panel-heading p {
+      color: var(--muted);
+      font-size: .91rem;
+    }
+
+    .drop-zone {
+      border: 2px dashed #45405f;
+      border-radius: 17px;
+      padding: 38px 20px;
+      text-align: center;
+      background: rgba(139,117,255,.045);
+      transition: border-color .2s, background .2s;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .drop-zone:hover,
+    .drop-zone.dragging,
+    .drop-zone:focus-visible {
+      border-color: var(--primary);
+      background: rgba(139,117,255,.1);
+    }
+
+    .upload-icon {
+      width: 62px;
+      height: 62px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 15px;
+      border-radius: 18px;
+      background: rgba(139,117,255,.15);
+      font-size: 1.8rem;
+    }
+
+    .drop-zone h3 {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+
+    .drop-zone p {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .browse-button {
+      display: inline-block;
+      margin: 17px 0 10px;
+      background: var(--primary);
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 17px;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .file-types {
+      color: #858da3 !important;
+      font-size: .78rem !important;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .file-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface-light);
+      min-width: 0;
+    }
+
+    .file-icon {
+      font-size: 1.6rem;
+    }
+
+    .file-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .file-name {
+      font-size: .9rem;
+      font-weight: 650;
+      overflow-wrap: anywhere;
+    }
+
+    .file-size {
+      font-size: .78rem;
+      color: var(--muted);
+    }
+
+    .remove-file {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--danger);
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+
+    .field-label {
+      display: block;
+      font-weight: 650;
+      font-size: .92rem;
+      margin-bottom: 9px;
+    }
+
+    textarea, input[type="text"], select {
+      width: 100%;
+      color: var(--text);
+      background: #0c0f18;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 125px;
+    }
+
+    textarea:focus,
+    input[type="text"]:focus,
+    select:focus {
+      border-color: var(--primary);
+    }
+
+    textarea::placeholder,
+    input::placeholder {
+      color: #707990;
+    }
+
+    .field-help {
+      color: var(--muted);
+      font-size: .82rem;
+      margin-top: 8px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: #838ba0;
+      font-size: .85rem;
+      margin: 22px 0;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: var(--border);
+    }
+
+    .examples {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .example-chip {
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      color: #d4d8e6;
+      padding: 7px 12px;
+      border-radius: 100px;
+      cursor: pointer;
+      font-size: .82rem;
+    }
+
+    .example-chip:hover {
+      border-color: var(--primary);
+    }
+
+    .select-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 17px;
+    }
+
+    .select-group select {
+      margin-top: 7px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      margin-top: 20px;
+      color: #d5daea;
+      font-size: .9rem;
+    }
+
+    .checkbox-row input {
+      margin-top: 5px;
+      accent-color: var(--primary);
+    }
+
+    .notice {
+      padding: 14px 16px;
+      border: 1px solid rgba(68,217,193,.22);
+      background: rgba(68,217,193,.055);
+      border-radius: 12px;
+      color: #b9eee5;
+      font-size: .86rem;
+      margin-top: 18px;
+    }
+
+    .error-message {
+      display: none;
+      color: #ff9aa4;
+      font-size: .88rem;
+      margin-top: 12px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 20px;
+      border-radius: 11px;
+      border: 1px solid var(--border);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-back {
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #8067ff, #a16dff);
+      border-color: transparent;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.1);
+    }
+
+    .btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+      color: var(--muted);
+      font-size: .83rem;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding-top: 35px;
+      }
+
+      .panel {
+        padding: 19px;
+      }
+
+      .select-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .drop-zone {
+        padding: 28px 14px;
+      }
+
+      .step-line {
+        width: 12px;
+      }
+
+      .actions > * {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="container">
+      <a class="logo" href="index.html">Learn<span>AI.</span></a>
+      <a class="back-link" href="index.html">← Back to home</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="page-heading">
+      <div class="eyebrow">Your learning journey starts here</div>
+
+      <h1>What do you want to learn?</h1>
+
+      <p>
+        Give us your study material, describe what you need help with,
+        and tell your AI teacher how you want to learn.
+      </p>
+
+      <div class="step-indicator">
+        <div class="step active">
+          <span class="step-number">1</span>
+          <span>Upload</span>
+        </div>
+        <span class="step-line"></span>
+        <div class="step">
+          <span class="step-number">2</span>
+          <span>Customize</span>
+        </div>
+        <span class="step-line"></span>
+        <div class="step">
+          <span class="step-number">3</span>
+          <span>Learn</span>
+        </div>
+      </div>
+    </div>
+
+    <form id="lessonForm">
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>📂 Upload your learning material</h2>
+          <p>Upload one or more supported files.</p>
+        </div>
+
+        <div
+          class="drop-zone"
+          id="dropZone"
+          role="button"
+          tabindex="0"
+          aria-label="Choose or drop learning files">
+
+          <div class="upload-icon">☁️</div>
+          <h3>Drag and drop your files here</h3>
+          <p>Or choose files from your device</p>
+
+          <button class="browse-button" type="button" id="browseButton">
+            Browse files
+          </button>
+
+          <p class="file-types">
+            PDF, PPT, PPTX, DOCX, TXT, PNG, JPG, JPEG, MP3, WAV, MP4
+          </p>
+
+          <input
+            type="file"
+            id="fileInput"
+            multiple
+            accept=".pdf,.ppt,.pptx,.docx,.txt,.png,.jpg,.jpeg,.mp3,.wav,.m4a,.mp4,.webm">
+        </div>
+
+        <div id="fileList" class="file-list"></div>
+
+        <p class="field-help">
+          Demo limitation: this page can select and validate files in your
+          browser. Uploading them to an AI processing server requires a backend.
+        </p>
+
+        <div class="divider">OR START WITH A TOPIC</div>
+
+        <label class="field-label" for="topic">
+          Topic, question, or subject
+        </label>
+
+        <input
+          type="text"
+          id="topic"
+          name="topic"
+          placeholder="e.g. Operating System CPU Scheduling, Photosynthesis, SQL joins">
+
+        <div class="examples">
+          <button type="button" class="example-chip" data-topic="Explain this topic from scratch with simple examples.">
+            Explain from scratch
+          </button>
+          <button type="button" class="example-chip" data-topic="Teach me how to solve this question paper step by step.">
+            Solve a question paper
+          </button>
+          <button type="button" class="example-chip" data-topic="Give me a quick examination revision lesson with key formulas and common mistakes.">
+            Quick revision
+          </button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>📝 Tell your AI teacher what you need</h2>
+          <p>
+            Be as specific as you want. Your instructions will guide
+            the planned teaching experience.
+          </p>
+        </div>
+
+        <label class="field-label" for="instructions">
+          Custom teaching instructions
+        </label>
+
+        <textarea
+          id="instructions"
+          name="instructions"
+          placeholder="Example: Teach me as if I am a complete beginner. Explain every concept slowly, use simple English, show diagrams and worked examples, explain each calculation, and finish with a quiz."></textarea>
+
+        <p class="field-help">
+          Include your learning difficulties, preferred examples,
+          examination requirements, or concepts you find confusing.
+        </p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>🎯 Quick learning preferences</h2>
+          <p>You can customize your lesson further on the next page.</p>
+        </div>
+
+        <div class="select-grid">
+          <div class="select-group">
+            <label class="field-label" for="language">
+              Teaching language
+            </label>
+            <select id="language" name="language">
+              <option value="English">English</option>
+              <option value="Hindi">Hindi</option>
+              <option value="Tamil">Tamil</option>
+              <option value="Malayalam">Malayalam</option>
+              <option value="Telugu">Telugu</option>
+              <option value="Kannada">Kannada</option>
+              <option value="Bengali">Bengali</option>
+            </select>
+          </div>
+
+          <div class="select-group">
+            <label class="field-label" for="level">
+              Current knowledge
+            </label>
+            <select id="level" name="level">
+              <option value="Beginner">Beginner — teach me from zero</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+            </select>
+          </div>
+
+          <div class="select-group">
+            <label class="field-label" for="pace">
+              Teaching pace
+            </label>
+            <select id="pace" name="pace">
+              <option value="Very slow">Very slow</option>
+              <option value="Slow">Slow</option>
+              <option value="Normal">Normal</option>
+              <option value="Fast">Fast</option>
+            </select>
+          </div>
+
+          <div class="select-group">
+            <label class="field-label" for="goal">
+              Learning goal
+            </label>
+            <select id="goal" name="goal">
+              <option value="Understand from scratch">Understand from scratch</option>
+              <option value="Exam preparation">Exam preparation</option>
+              <option value="Quick revision">Quick revision</option>
+              <option value="Solve problems">Solve problems</option>
+              <option value="Research understanding">Research understanding</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="checkbox-row">
+          <input type="checkbox" id="includeQuiz" name="includeQuiz" checked>
+          <span>
+            Include practice questions and a final recap in my lesson.
+          </span>
+        </label>
+
+        <div class="notice">
+          ✨ Your preferences will be carried into the lesson configuration
+          page so you can continue customizing your teacher and video.
+        </div>
+
+        <p class="error-message" id="errorMessage" role="alert"></p>
+
+        <div class="actions">
+          <a href="index.html" class="btn btn-back">← Back</a>
+
+          <button type="submit" class="btn btn-primary">
+            Customize my teacher →
+          </button>
+        </div>
+      </section>
+    </form>
+  </main>
+
+  <footer>
+    <div class="container">
+      LearnAI — Your personal learning experience.
+    </div>
+  </footer>
+
+  <script>
+    const fileInput = document.getElementById("fileInput");
+    const dropZone = document.getElementById("dropZone");
+    const browseButton = document.getElementById("browseButton");
+    const fileList = document.getElementById("fileList");
+    const lessonForm = document.getElementById("lessonForm");
+    const errorMessage = document.getElementById("errorMessage");
+
+    const MAX_FILE_SIZE = 25 * 1024 * 1024;
+    const ALLOWED_EXTENSIONS = new Set([
+      "pdf", "ppt", "pptx", "docx", "txt",
+      "png", "jpg", "jpeg", "mp3", "wav",
+      "m4a", "mp4", "webm"
+    ]);
+
+    let selectedFiles = [];
+
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.style.display = "block";
+    }
+
+    function clearError() {
+      errorMessage.textContent = "";
+      errorMessage.style.display = "none";
+    }
+
+    function formatSize(bytes) {
+      if (bytes < 1024 * 1024) {
+        return (bytes / 1024).toFixed(1) + " KB";
+      }
+
+      return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+    }
+
+    function getExtension(filename) {
+      return filename.includes(".")
+        ? filename.split(".").pop().toLowerCase()
+        : "";
+    }
+
+    function getFileIcon(extension) {
+      if (["png", "jpg", "jpeg"].includes(extension)) return "🖼️";
+      if (["mp3", "wav", "m4a"].includes(extension)) return "🎧";
+      if (["mp4", "webm"].includes(extension)) return "🎬";
+      if (["ppt", "pptx"].includes(extension)) return "📊";
+      if (extension === "pdf") return "📕";
+      return "📄";
+    }
+
+    function renderFiles() {
+      fileList.replaceChildren();
+
+      selectedFiles.forEach((file, index) => {
+        const extension = getExtension(file.name);
+
+        const item = document.createElement("div");
+        item.className = "file-item";
+
+        const icon = document.createElement("span");
+        icon.className = "file-icon";
+        icon.textContent = getFileIcon(extension);
+
+        const info = document.createElement("div");
+        info.className = "file-info";
+
+        const name = document.createElement("div");
+        name.className = "file-name";
+        name.textContent = file.name;
+
+        const size = document.createElement("div");
+        size.className = "file-size";
+        size.textContent = formatSize(file.size);
+
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "remove-file";
+        remove.textContent = "Remove";
+        remove.setAttribute("aria-label", "Remove " + file.name);
+
+        remove.addEventListener("click", () => {
+          selectedFiles.splice(index, 1);
+          renderFiles();
+          clearError();
+        });
+
+        info.append(name, size);
+        item.append(icon, info, remove);
+        fileList.appendChild(item);
+      });
+    }
+
+    function addFiles(fileCollection) {
+      clearError();
+
+      const incoming = Array.from(fileCollection);
+      const rejected = [];
+
+      for (const file of incoming) {
+        const extension = getExtension(file.name);
+
+        if (!ALLOWED_EXTENSIONS.has(extension)) {
+          rejected.push(file.name + ": unsupported file type");
+          continue;
+        }
+
+        if (file.size > MAX_FILE_SIZE) {
+          rejected.push(file.name + ": exceeds the 25 MB limit");
+          continue;
+        }
+
+        const alreadyAdded = selectedFiles.some(
+          existing =>
+            existing.name === file.name &&
+            existing.size === file.size &&
+            existing.lastModified === file.lastModified
+        );
+
+        if (!alreadyAdded) {
+          selectedFiles.push(file);
+        }
+      }
+
+      renderFiles();
+
+      if (rejected.length) {
+        showError(rejected.join(". "));
+      }
+    }
+
+    browseButton.addEventListener("click", event => {
+      event.stopPropagation();
+      fileInput.click();
+    });
+
+    dropZone.addEventListener("click", event => {
+      if (event.target !== browseButton) {
+        fileInput.click();
+      }
+    });
+
+    dropZone.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        fileInput.click();
+      }
+    });
+
+    fileInput.addEventListener("change", () => {
+      addFiles(fileInput.files);
+      fileInput.value = "";
+    });
+
+    ["dragenter", "dragover"].forEach(eventName => {
+      dropZone.addEventListener(eventName, event => {
+        event.preventDefault();
+        dropZone.classList.add("dragging");
+      });
+    });
+
+    ["dragleave", "drop"].forEach(eventName => {
+      dropZone.addEventListener(eventName, event => {
+        event.preventDefault();
+        dropZone.classList.remove("dragging");
+      });
+    });
+
+    dropZone.addEventListener("drop", event => {
+      addFiles(event.dataTransfer.files);
+    });
+
+    document.querySelectorAll(".example-chip").forEach(button => {
+      button.addEventListener("click", () => {
+        const instructions = document.getElementById("instructions");
+        const example = button.dataset.topic;
+
+        instructions.value = instructions.value.trim()
+          ? instructions.value.trim() + "\n\n" + example
+          : example;
+
+        instructions.focus();
+      });
+    });
+
+    lessonForm.addEventListener("submit", event => {
+      event.preventDefault();
+      clearError();
+
+      const topic = document.getElementById("topic").value.trim();
+      const instructions = document.getElementById("instructions").value.trim();
+
+      if (selectedFiles.length === 0 && !topic) {
+        showError("Please upload at least one file or enter a topic to continue.");
+        document.getElementById("topic").focus();
+        return;
+      }
+
+      const lessonData = {
+        topic,
+        instructions,
+        language: document.getElementById("language").value,
+        level: document.getElementById("level").value,
+        pace: document.getElementById("pace").value,
+        goal: document.getElementById("goal").value,
+        includeQuiz: document.getElementById("includeQuiz").checked,
+        files: selectedFiles.map(file => ({
+          name: file.name,
+          size: file.size,
+          type: file.type
+        }))
+      };
+
+      try {
+        sessionStorage.setItem(
+          "learnAI_lessonConfig",
+          JSON.stringify(lessonData)
+        );
+
+        /*
+          This page currently saves configuration metadata only.
+          Actual file contents must be uploaded to a backend before
+          an AI model can read them.
+        */
+
+        window.location.href = "configure.html";
+      } catch (error) {
+        showError(
+          "Your browser could not save the lesson settings. " +
+          "Try removing some files or reducing the amount of text."
+        );
+      }
+    });
+  </script>
+</body>
+</html>
