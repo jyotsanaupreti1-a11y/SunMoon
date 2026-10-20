@@ -1,1 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Learning Studio | LearnAI</title>
 
+  <style>
+    :root {
+      --bg: #090b12;
+      --surface: #111521;
+      --surface2: #191e2d;
+      --text: #f5f7ff;
+      --muted: #a0a8bc;
+      --primary: #8b75ff;
+      --secondary: #44d9c1;
+      --border: rgba(255,255,255,.11);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .container {
+      width: min(1200px, 94%);
+      margin: auto;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 850;
+      letter-spacing: -1px;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    main {
+      padding: 35px 0 65px;
+    }
+
+    .page-heading {
+      margin-bottom: 25px;
+    }
+
+    .eyebrow {
+      color: var(--secondary);
+      font-size: .8rem;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      line-height: 1.2;
+      letter-spacing: -1px;
+      margin: 9px 0;
+    }
+
+    .page-heading p {
+      color: var(--muted);
+    }
+
+    .studio-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) minmax(280px, .85fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .panel-body {
+      padding: 22px;
+    }
+
+    .video-shell {
+      background: #05060a;
+      aspect-ratio: 16 / 9;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #05060a;
+    }
+
+    .video-placeholder {
+      padding: 28px;
+      text-align: center;
+      max-width: 460px;
+    }
+
+    .video-placeholder .icon {
+      font-size: 3.5rem;
+      margin-bottom: 15px;
+    }
+
+    .video-placeholder h2 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .video-placeholder p {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .video-status {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 6px 11px;
+      background: rgba(139,117,255,.13);
+      color: #c8bcff;
+      border-radius: 100px;
+      font-size: .78rem;
+    }
+
+    .video-meta {
+      padding: 20px 22px;
+      border-top: 1px solid var(--border);
+    }
+
+    .video-meta h2 {
+      font-size: 1.25rem;
+      overflow-wrap: anywhere;
+    }
+
+    .meta-line {
+      color: var(--muted);
+      font-size: .85rem;
+      margin-top: 7px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 17px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface2);
+      color: var(--text);
+      font-weight: 650;
+      font-size: .86rem;
+    }
+
+    .btn:hover {
+      border-color: var(--primary);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border-color: transparent;
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      margin-bottom: 15px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+      padding: 15px 18px 0;
+    }
+
+    .tab {
+      padding: 10px 12px;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .tab.active {
+      color: white;
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-content {
+      padding: 22px;
+    }
+
+    .tab-content p {
+      color: #d0d5e4;
+      font-size: .92rem;
+    }
+
+    .transcript {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.9;
+      color: #d0d5e4;
+      font-size: .9rem;
+    }
+
+    .note-list {
+      padding-left: 20px;
+      color: #d0d5e4;
+    }
+
+    .note-list li {
+      margin-bottom: 10px;
+    }
+
+    .chapter-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .chapter {
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-align: left;
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .chapter:hover,
+    .chapter.active {
+      border-color: var(--primary);
+      background: rgba(139,117,255,.08);
+    }
+
+    .chapter-number {
+      color: var(--secondary);
+      font-size: .82rem;
+      font-weight: 800;
+    }
+
+    .chapter-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .chapter-info strong {
+      display: block;
+      font-size: .88rem;
+    }
+
+    .chapter-info small {
+      display: block;
+      color: var(--muted);
+      font-size: .78rem;
+      margin-top: 3px;
+    }
+
+    .chapter-time {
+      font-size: .78rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .empty-message {
+      color: var(--muted);
+      font-size: .87rem;
+      padding: 10px 0;
+    }
+
+    .quiz-question {
+      font-weight: 650;
+      margin-bottom: 14px;
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 9px;
+    }
+
+    .quiz-option {
+      text-align: left;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .quiz-option:disabled {
+      cursor: default;
+      opacity: .85;
+    }
+
+    .quiz-feedback {
+      margin-top: 13px;
+      font-size: .87rem;
+    }
+
+    .quiz-feedback.correct {
+      color: var(--secondary);
+    }
+
+    .quiz-feedback.incorrect {
+      color: #ff9aa4;
+    }
+
+    .form-label {
+      display: block;
+      margin: 14px 0 7px;
+      font-size: .87rem;
+      font-weight: 650;
+    }
+
+    textarea, select {
+      width: 100%;
+      background: #0c0f18;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: .8rem;
+      margin-top: 13px;
+    }
+
+    .status-message {
+      margin-top: 12px;
+      font-size: .85rem;
+      color: var(--secondary);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    @media (max-width: 850px) {
+      .studio-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        width: 92%;
+      }
+
+      .panel-body,
+      .tab-content {
+        padding: 17px;
+      }
+
+      .video-meta {
+        padding: 17px;
+      }
+
+      .nav-actions {
+        gap: 9px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="container">
+      <a href="index.html" class="logo">Learn<span>AI.</span></a>
+      <div class="nav-actions">
+        <a class="nav-link" href="library.html">My Library</a>
+        <a class="nav-link" href="index.html">Home</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="page-heading">
+      <div class="eyebrow">Your personal learning studio</div>
+      <h1 id="lessonHeading">Your lesson awaits.</h1>
+      <p id="lessonSubheading">
+        Your video, chapters, notes, and practice activities will appear here.
+      </p>
+    </div>
+
+    <div class="studio-grid">
+      <div>
+        <section class="panel">
+          <div class="video-shell" id="videoShell">
+            <div class="video-placeholder" id="videoPlaceholder">
+              <div class="icon">🎬</div>
+              <h2>Your teaching video will appear here</h2>
+              <p>
+                Once the video-generation backend is connected and a lesson
+                has finished rendering, you can watch it in this player.
+              </p>
+              <span class="video-status" id="videoStatus">Demo mode · No video loaded</span>
+            </div>
+
+            <video id="lessonVideo" controls playsinline hidden>
+              Your browser does not support HTML video.
+            </video>
+          </div>
+
+          <div class="video-meta">
+            <h2 id="videoTitle">Personalized AI lesson</h2>
+            <p class="meta-line" id="videoDetails">
+              Choose a topic and configure your teacher to begin.
+            </p>
+
+            <div class="button-row">
+              <button type="button" class="btn" id="speedButton">
+                Playback speed: 1×
+              </button>
+
+              <a href="library.html" class="btn">My lessons</a>
+
+              <button type="button" class="btn" id="downloadButton" disabled>
+                Download video
+              </button>
+            </div>
+
+            <p class="footer-note" id="downloadNote">
+              Video download becomes available when a real video file exists.
+            </p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="tabs" role="tablist" aria-label="Lesson resources">
+            <button class="tab active" role="tab" aria-selected="true"
+              aria-controls="tabTranscript" id="transcriptTab" type="button">
+              Transcript
+            </button>
+
+            <button class="tab" role="tab" aria-selected="false"
+              aria-controls="tabNotes" id="notesTab" type="button">
+              Study notes
+            </button>
+
+            <button class="tab" role="tab" aria-selected="false"
+              aria-controls="tabQuiz" id="quizTab" type="button">
+              Practice quiz
+            </button>
+          </div>
+
+          <div class="tab-content" id="tabTranscript" role="tabpanel"
+            aria-labelledby="transcriptTab">
+            <h2 class="section-title">Lesson transcript</h2>
+            <p class="empty-message" id="transcriptText">
+              The generated narration transcript will appear here when
+              the lesson backend is connected.
+            </p>
+          </div>
+
+          <div class="tab-content" id="tabNotes" role="tabpanel"
+            aria-labelledby="notesTab" hidden>
+            <h2 class="section-title">Your study notes</h2>
+            <ul class="note-list" id="notesList">
+              <li>Your lesson notes will appear here after generation.</li>
+            </ul>
+          </div>
+
+          <div class="tab-content" id="tabQuiz" role="tabpanel"
+            aria-labelledby="quizTab" hidden>
+            <h2 class="section-title">Check your understanding</h2>
+            <div id="quizContainer">
+              <p class="empty-message">
+                Practice questions will appear here when the lesson
+                content and quiz generation are connected.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-body">
+            <h2 class="section-title">💬 Ask about your lesson</h2>
+            <p class="empty-message">
+              This section is prepared for a future AI question-answering
+              integration grounded in your lesson material.
+            </p>
+
+            <label class="form-label" for="questionInput">
+              What would you like explained differently?
+            </label>
+
+            <textarea id="questionInput"
+              placeholder="e.g. Explain that formula more slowly with another example."
+              disabled></textarea>
+
+            <button type="button" class="btn btn-primary"
+              style="margin-top:12px" disabled>
+              Ask my AI teacher
+            </button>
+
+            <p class="footer-note">
+              Ask-the-teacher functionality requires a connected backend.
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <aside>
+        <section class="panel">
+          <div class="panel-body">
+            <h2 class="section-title">📑 Lesson chapters</h2>
+            <p class="empty-message" id="chapterMessage">
+              Chapter navigation will be available when a generated video
+              includes chapter timestamps.
+            </p>
+
+            <div class="chapter-list" id="chapterList"></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-body">
+            <h2 class="section-title">✨ Your learning settings</h2>
+            <div class="chapter-list" id="settingsList">
+              <p class="empty-message">No saved lesson settings found yet.</p>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      LearnAI — Learn anything, your way.
+    </div>
+  </footer>
+
+  <script>
+    const $ = id => document.getElementById(id);
+
+    function readJSON(key) {
+      try {
+        return JSON.parse(sessionStorage.getItem(key) || "null");
+      } catch {
+        return null;
+      }
+    }
+
+    const source = readJSON("learnAI_lessonConfig");
+    const config = readJSON("learnAI_teacherConfig");
+
+    const video = $("lessonVideo");
+    const placeholder = $("videoPlaceholder");
+
+    function addSetting(label, value) {
+      if (!value) return;
+
+      const item = document.createElement("div");
+      item.className = "chapter";
+
+      const info = document.createElement("div");
+      info.className = "chapter-info";
+
+      const title = document.createElement("strong");
+      title.textContent = label;
+
+      const detail = document.createElement("small");
+      detail.textContent = value;
+
+      info.append(title, detail);
+      item.append(info);
+      $("settingsList").append(item);
+    }
+
+    function renderSettings() {
+      const list = $("settingsList");
+      list.replaceChildren();
+
+      if (!source && !config) {
+        list.innerHTML =
+          '<p class="empty-message">Configure a lesson first to see your settings.</p>';
+        return;
+      }
+
+      addSetting("Teacher", config?.teacher);
+      addSetting("Teaching language", config?.language || source?.language);
+      addSetting("Knowledge level", config?.level || source?.level);
+      addSetting("Teaching pace", config?.paceLabel || source?.pace);
+      addSetting("Teaching depth", config?.depth);
+      addSetting("Learning goal", config?.goal || source?.goal);
+      addSetting("Target duration", config?.duration);
+
+      if (config?.visuals?.length) {
+        addSetting("Included features", config.visuals.join(", "));
+      }
+    }
+
+    function renderLessonInfo() {
+      const topic = source?.topic?.trim();
+      const files = source?.files || [];
+
+      const title = topic || (
+        files.length
+          ? files.map(file => file.name).join(", ")
+          : "Your personalized lesson"
+      );
+
+      $("lessonHeading").textContent = topic
+        ? "Let's learn " + topic
+        : "Your learning studio";
+
+      $("videoTitle").textContent = title;
+
+      const details = [
+        config?.teacher,
+        config?.language,
+        config?.duration
+      ].filter(Boolean);
+
+      $("videoDetails").textContent = details.length
+        ? details.join(" · ")
+        : "Personalized lesson · Demo mode";
+
+      $("lessonSubheading").textContent =
+        "Your selected teaching preferences are ready to use when generation is connected.";
+
+      renderSettings();
+    }
+
+    // Switch between transcript, notes, and quiz panels.
+    const tabButtons = [
+      { button: "transcriptTab", panel: "tabTranscript" },
+      { button: "notesTab", panel: "tabNotes" },
+      { button: "quizTab", panel: "tabQuiz" }
+    ];
+
+    tabButtons.forEach(tab => {
+      $(tab.button).addEventListener("click", () => {
+        tabButtons.forEach(item => {
+          const selected = item.button === tab.button;
+
+          $(item.button).classList.toggle("active", selected);
+          $(item.button).setAttribute("aria-selected", String(selected));
+          $(item.panel).hidden = !selected;
+        });
+      });
+    });
+
+    // Cycle through standard playback speeds.
+    const speeds = [1, 1.25, 1.5, 1.75, 2];
+    let speedIndex = 0;
+
+    $("speedButton").addEventListener("click", () => {
+      speedIndex = (speedIndex + 1) % speeds.length;
+      video.playbackRate = speeds[speedIndex];
+      $("speedButton").textContent =
+        "Playback speed: " + speeds[speedIndex] + "×";
+    });
+
+    // Load only a URL explicitly supplied by a trusted backend.
+    // A URL is never guessed from a lesson title or uploaded filename.
+    const generatedVideo = readJSON("learnAI_generatedLesson");
+
+    if (
+      generatedVideo &&
+      typeof generatedVideo.videoUrl === "string" &&
+      /^https?:\/\//i.test(generatedVideo.videoUrl)
+    ) {
+      video.src = generatedVideo.videoUrl;
+      video.hidden = false;
+      placeholder.hidden = true;
+      $("videoStatus").textContent = "Video file connected";
+      $("downloadButton").disabled = false;
+      $("downloadNote").textContent =
+        "Use the download button to open the generated video file.";
+      $("videoTitle").textContent =
+        generatedVideo.title || $("videoTitle").textContent;
+
+      $("downloadButton").addEventListener("click", () => {
+        window.open(generatedVideo.videoUrl, "_blank", "noopener,noreferrer");
+      });
+    }
+
+    // Chapters can be provided by the future backend as timestamps.
+    if (
+      generatedVideo &&
+      Array.isArray(generatedVideo.chapters) &&
+      generatedVideo.chapters.length
+    ) {
+      $("chapterMessage").textContent =
+        "Select a chapter to jump to that point in the video.";
+
+      generatedVideo.chapters.forEach((chapter, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "chapter";
+
+        const number = document.createElement("span");
+        number.className = "chapter-number";
+        number.textContent = String(index + 1).padStart(2, "0");
+
+        const info = document.createElement("span");
+        info.className = "chapter-info";
+
+        const title = document.createElement("strong");
+        title.textContent = chapter.title || "Chapter " + (index + 1);
+
+        const time = document.createElement("small");
+        time.textContent = "Jump to chapter";
+
+        info.append(title, time);
+        button.append(number, info);
+        button.addEventListener("click", () => {
+          if (Number.isFinite(chapter.startSeconds)) {
+            video.currentTime = chapter.startSeconds;
+            video.play().catch(() => {});
+          }
+        });
+
+        $("chapterList").append(button);
+      });
+    }
+
+    // Display only real transcript data provided by the backend.
+    if (
+      generatedVideo &&
+      typeof generatedVideo.transcript === "string" &&
+      generatedVideo.transcript.trim()
+    ) {
+      $("transcriptText").textContent = generatedVideo.transcript;
+    }
+
+    if (
+      generatedVideo &&
+      Array.isArray(generatedVideo.notes) &&
+      generatedVideo.notes.length
+    ) {
+      const notesList = $("notesList");
+      notesList.replaceChildren();
+
+      generatedVideo.notes.forEach(note => {
+        const li = document.createElement("li");
+        li.textContent = note;
+        notesList.append(li);
+      });
+    }
+
+    renderLessonInfo();
+  </script>
+</body>
+</html>
