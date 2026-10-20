@@ -1,1 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creating Your Lesson | LearnAI</title>
 
+  <style>
+    :root {
+      --bg: #090b12;
+      --surface: #111521;
+      --surface2: #191e2d;
+      --text: #f5f7ff;
+      --muted: #a0a8bc;
+      --primary: #8b75ff;
+      --secondary: #44d9c1;
+      --border: rgba(255,255,255,.11);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(850px, 92%);
+      margin: auto;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav {
+      min-height: 75px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 850;
+      letter-spacing: -1px;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .back-link {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    main {
+      flex: 1;
+      padding: 65px 0 80px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .eyebrow {
+      color: var(--secondary);
+      font-size: .8rem;
+      font-weight: 750;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+      margin: 13px 0;
+    }
+
+    .gradient {
+      background: linear-gradient(100deg, #a18aff, #56e3ce);
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .hero p {
+      max-width: 590px;
+      margin: auto;
+      color: var(--muted);
+    }
+
+    .animation {
+      width: 120px;
+      height: 120px;
+      margin: 30px auto;
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .orbit {
+      position: absolute;
+      inset: 0;
+      border: 2px solid rgba(139,117,255,.35);
+      border-radius: 50%;
+      animation: rotate 5s linear infinite;
+    }
+
+    .orbit::before {
+      content: "";
+      position: absolute;
+      width: 13px;
+      height: 13px;
+      background: var(--secondary);
+      border-radius: 50%;
+      top: 10px;
+      left: 12px;
+      box-shadow: 0 0 18px rgba(68,217,193,.6);
+    }
+
+    .brain {
+      font-size: 3.3rem;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    @keyframes rotate {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes float {
+      50% { transform: translateY(-7px); }
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 27px;
+      margin-bottom: 20px;
+    }
+
+    .panel h2 {
+      font-size: 1.15rem;
+      margin-bottom: 8px;
+    }
+
+    .panel-description {
+      color: var(--muted);
+      font-size: .9rem;
+      margin-bottom: 22px;
+    }
+
+    .lesson-summary {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 16px;
+      background: var(--surface2);
+      border-radius: 13px;
+      margin-top: 17px;
+    }
+
+    .summary-icon {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: rgba(139,117,255,.15);
+      font-size: 1.5rem;
+    }
+
+    .summary-content {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .summary-content strong {
+      display: block;
+      overflow-wrap: anywhere;
+    }
+
+    .summary-content p {
+      color: var(--muted);
+      font-size: .84rem;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 11px;
+      font-size: .9rem;
+    }
+
+    .progress-number {
+      color: var(--secondary);
+      font-weight: 800;
+    }
+
+    .progress-track {
+      height: 9px;
+      border-radius: 100px;
+      background: #252a3b;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: inherit;
+      transition: width .6s ease;
+    }
+
+    .progress-note {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .stages {
+      display: grid;
+      gap: 12px;
+    }
+
+    .stage {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 15px;
+      background: var(--surface2);
+    }
+
+    .stage-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      border-radius: 12px;
+      background: #24283a;
+      font-size: 1.2rem;
+    }
+
+    .stage-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .stage-content h3 {
+      font-size: .93rem;
+      margin-bottom: 3px;
+    }
+
+    .stage-content p {
+      color: var(--muted);
+      font-size: .81rem;
+    }
+
+    .stage-status {
+      color: var(--muted);
+      font-size: .8rem;
+      white-space: nowrap;
+    }
+
+    .stage.completed {
+      border-color: rgba(68,217,193,.2);
+    }
+
+    .stage.completed .stage-icon {
+      background: rgba(68,217,193,.12);
+      color: var(--secondary);
+    }
+
+    .stage.completed .stage-status {
+      color: var(--secondary);
+    }
+
+    .stage.active {
+      border-color: rgba(139,117,255,.55);
+      background: rgba(139,117,255,.06);
+    }
+
+    .stage.active .stage-icon {
+      background: rgba(139,117,255,.18);
+    }
+
+    .stage.active .stage-status {
+      color: #c3b8ff;
+    }
+
+    .spinner {
+      width: 17px;
+      height: 17px;
+      border: 2px solid rgba(139,117,255,.25);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: rotate 1s linear infinite;
+    }
+
+    .notice {
+      padding: 15px;
+      background: rgba(139,117,255,.06);
+      border: 1px solid rgba(139,117,255,.2);
+      border-radius: 12px;
+      color: #d4ceff;
+      font-size: .85rem;
+      margin-top: 20px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 25px;
+    }
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid var(--border);
+      padding: 12px 18px;
+      border-radius: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #8067ff, #a16dff);
+      border-color: transparent;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+    }
+
+    .error {
+      display: none;
+      color: #ff9aa4;
+      margin-top: 18px;
+      font-size: .9rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    @media (max-width: 550px) {
+      main {
+        padding-top: 40px;
+      }
+
+      .panel {
+        padding: 19px;
+      }
+
+      .stage {
+        align-items: flex-start;
+      }
+
+      .stage-status {
+        font-size: .72rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="container">
+      <a href="index.html" class="logo">Learn<span>AI.</span></a>
+      <a href="configure.html" class="back-link">← Edit lesson</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="eyebrow">Your personal learning experience</div>
+      <div class="animation" aria-hidden="true">
+        <div class="orbit"></div>
+        <div class="brain">🧠</div>
+      </div>
+
+      <h1 id="headline">Preparing your <span class="gradient">lesson.</span></h1>
+
+      <p id="description">
+        Your lesson settings are being prepared for the next stage.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>📚 Your lesson</h2>
+      <p class="panel-description">
+        A quick look at the learning experience you've configured.
+      </p>
+
+      <div class="lesson-summary">
+        <div class="summary-icon">🎓</div>
+        <div class="summary-content">
+          <strong id="lessonTitle">Personalized AI lesson</strong>
+          <p id="lessonDetails">Loading your saved preferences…</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="progress-top">
+        <span id="progressLabel">Preparing lesson preview</span>
+        <span class="progress-number" id="progressNumber">0%</span>
+      </div>
+
+      <div
+        class="progress-track"
+        role="progressbar"
+        aria-label="Demo generation progress"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+        id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <p class="progress-note" id="progressNote">
+        This is a frontend demonstration, not a real AI rendering job.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>⚡ Lesson creation stages</h2>
+      <p class="panel-description">
+        This is the pipeline the connected application will execute.
+      </p>
+
+      <div class="stages" id="stages">
+        <div class="stage" data-stage="0">
+          <div class="stage-icon">📄</div>
+          <div class="stage-content">
+            <h3>Read your learning material</h3>
+            <p>Extract document text and identify usable content.</p>
+          </div>
+          <span class="stage-status">Waiting</span>
+        </div>
+
+        <div class="stage" data-stage="1">
+          <div class="stage-icon">🧠</div>
+          <div class="stage-content">
+            <h3>Understand the concepts</h3>
+            <p>Identify topics, prerequisites and learning objectives.</p>
+          </div>
+          <span class="stage-status">Waiting</span>
+        </div>
+
+        <div class="stage" data-stage="2">
+          <div class="stage-icon">📝</div>
+          <div class="stage-content">
+            <h3>Build your teaching plan</h3>
+            <p>Adapt the explanation to your selected teacher and language.</p>
+          </div>
+          <span class="stage-status">Waiting</span>
+        </div>
+
+        <div class="stage" data-stage="3">
+          <div class="stage-icon">🎙️</div>
+          <div class="stage-content">
+            <h3>Create narration and visuals</h3>
+            <p>Prepare spoken explanations, diagrams and scenes.</p>
+          </div>
+          <span class="stage-status">Waiting</span>
+        </div>
+
+        <div class="stage" data-stage="4">
+          <div class="stage-icon">🎬</div>
+          <div class="stage-content">
+            <h3>Render the final video</h3>
+            <p>Synchronize audio, scenes and subtitles into a video.</p>
+          </div>
+          <span class="stage-status">Waiting</span>
+        </div>
+      </div>
+
+      <div class="notice">
+        Demo mode: this page does not read uploaded file contents, call an AI
+        provider, or render an MP4 yet. The progress animation below is only
+        a preview of the intended workflow.
+      </div>
+
+      <p class="error" id="errorMessage" role="alert"></p>
+
+      <div class="actions" id="actions">
+        <a href="configure.html" class="btn btn-secondary">← Edit settings</a>
+        <button type="button" class="btn btn-primary" id="startDemo">
+          Preview progress →
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">LearnAI — Your personal learning experience.</div>
+  </footer>
+
+  <script>
+    const headline = document.getElementById("headline");
+    const description = document.getElementById("description");
+    const lessonTitle = document.getElementById("lessonTitle");
+    const lessonDetails = document.getElementById("lessonDetails");
+    const progressLabel = document.getElementById("progressLabel");
+    const progressNumber = document.getElementById("progressNumber");
+    const progressFill = document.getElementById("progressFill");
+    const progressBar = document.getElementById("progressBar");
+    const progressNote = document.getElementById("progressNote");
+    const startDemo = document.getElementById("startDemo");
+    const errorMessage = document.getElementById("errorMessage");
+
+    const stages = [
+      "Reading material",
+      "Understanding concepts",
+      "Planning your lesson",
+      "Preparing narration and visuals",
+      "Rendering video"
+    ];
+
+    let currentStage = -1;
+    let demoRunning = false;
+
+    function readStorage(key) {
+      try {
+        return JSON.parse(sessionStorage.getItem(key) || "null");
+      } catch {
+        return null;
+      }
+    }
+
+    const source = readStorage("learnAI_lessonConfig");
+    const config = readStorage("learnAI_teacherConfig");
+
+    function showLessonSummary() {
+      const topic = source?.topic?.trim();
+      const uploadedFiles = source?.files || [];
+
+      lessonTitle.textContent = topic || (
+        uploadedFiles.length
+          ? uploadedFiles.map(file => file.name).join(", ")
+          : "Personalized AI lesson"
+      );
+
+      const details = [];
+
+      if (config?.teacher) details.push(config.teacher);
+      if (config?.language) details.push(config.language);
+      if (config?.duration) details.push(config.duration);
+      if (config?.paceLabel) details.push(config.paceLabel + " pace");
+
+      lessonDetails.textContent = details.length
+        ? details.join(" · ")
+        : "Default preferences · Demo mode";
+    }
+
+    function setProgress(value, label) {
+      progressFill.style.width = value + "%";
+      progressNumber.textContent = value + "%";
+      progressLabel.textContent = label;
+      progressBar.setAttribute("aria-valuenow", String(value));
+    }
+
+    function updateStages(activeIndex) {
+      document.querySelectorAll(".stage").forEach((stage, index) => {
+        const status = stage.querySelector(".stage-status");
+        const icon = stage.querySelector(".stage-icon");
+
+        stage.classList.remove("active", "completed");
+
+        if (index < activeIndex) {
+          stage.classList.add("completed");
+          status.textContent = "Previewed";
+          icon.textContent = "✓";
+        } else if (index === activeIndex) {
+          stage.classList.add("active");
+          status.textContent = "Previewing";
+          icon.textContent = "⏳";
+        } else {
+          status.textContent = "Waiting";
+          icon.textContent = ["📄", "🧠", "📝", "🎙️", "🎬"][index];
+        }
+      });
+    }
+
+    function finishDemo() {
+      demoRunning = false;
+      currentStage = -1;
+
+      headline.innerHTML =
+        'Preview <span class="gradient">complete.</span>';
+
+      description.textContent =
+        "You've previewed the workflow. No AI video has been generated yet.";
+
+      setProgress(100, "Demo preview complete");
+      updateStages(stages.length);
+
+      document.querySelectorAll(".stage").forEach(stage => {
+        stage.classList.remove("active");
+        stage.classList.add("completed");
+        stage.querySelector(".stage-status").textContent = "Previewed";
+        stage.querySelector(".stage-icon").textContent = "✓";
+      });
+
+      progressNote.textContent =
+        "Connect the backend to replace this demonstration with real job status.";
+
+      startDemo.disabled = false;
+      startDemo.textContent = "Replay demo";
+    }
+
+    function runDemo() {
+      if (demoRunning) return;
+
+      demoRunning = true;
+      currentStage = 0;
+      startDemo.disabled = true;
+      startDemo.textContent = "Preview running…";
+
+      headline.innerHTML =
+        'Preparing your <span class="gradient">lesson.</span>';
+
+      description.textContent =
+        "Watch how the lesson-generation pipeline is intended to work.";
+
+      progressNote.textContent =
+        "Illustrative progress only. No files are being processed.";
+
+      errorMessage.style.display = "none";
+
+      function advance() {
+        if (!demoRunning) return;
+
+        if (currentStage >= stages.length) {
+          finishDemo();
+          return;
+        }
+
+        const percentage = Math.round(
+          ((currentStage + 1) / stages.length) * 100
+        );
+
+        setProgress(percentage, stages[currentStage]);
+        updateStages(currentStage);
+
+        currentStage++;
+
+        // Demonstration timing only; replace with backend job status.
+        window.setTimeout(advance, 1100);
+      }
+
+      setProgress(0, "Starting preview");
+      advance();
+    }
+
+    showLessonSummary();
+
+    startDemo.addEventListener("click", runDemo);
+
+    /*
+      REAL IMPLEMENTATION WILL:
+      1. Submit the saved lesson settings and actual uploaded files to the backend.
+      2. Receive a real lesson job ID.
+      3. Poll a status endpoint or use server-sent events.
+      4. Update progress from backend job status.
+      5. Redirect to lesson.html only after the MP4 is actually ready.
+
+      Do not redirect to a fake completed video.
+    */
+  </script>
+</body>
+</html>
